@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="Description" content="Rakaly blog">
+    {{ partial "head.html" . }}
+    {{ partial "blog-head.html" . }}
+    <title>Rakaly Blog</title>
+  </head>
+  <body>
+      {{ partial "blog-menu.html" . }}
+      {{ .Content }}
+      {{ $len := (len .Pages) }}
+      {{ range $i, $e := .Pages }}
+        {{- $image := .Page.Resources.GetMatch .Params.banner | fingerprint -}}
+        <img alt="{{ .Title }} banner" src="{{ $image.RelPermalink }}"/>
+        <h2>{{ .Title }}</h2>
+        <span>Date written: {{ .Date.Format "January 2, 2006" }}</span>
+        <p>
+          {{ .Summary }}
+        </p>
+        <p>
+          {{ $u := strings.TrimSuffix "/" .RelPermalink }}
+          <a href="{{ $u }}">Read more...</a>
+        </p>
+        {{- if ne (add $i 1) $len }}
+        <hr style="margin: 2em" />
+        {{- end }}
+      {{ end }}
+    {{ partial "blog-footer.html" . }}
+  </body>
+</html>

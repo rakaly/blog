@@ -1,0 +1,88 @@
+@import "sanitize.css/sanitize";
+@import "sanitize.css/forms";
+@import "sanitize.css/typography";
+@import "sanitize.css/page";
+
+div.highlight > pre {
+  padding: 1em;
+}
+
+nav[role="navigation"] {
+  // https://stackoverflow.com/a/114549/433785
+  display: table;
+  margin: 0 auto;
+  margin-bottom: 1em;
+
+  a {
+    padding: 16px;
+    text-decoration: none;
+    border-bottom: solid #007dea;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+  }
+
+  li {
+    display: block;
+    float: left;
+    padding: 1rem;
+    position: relative;
+    text-decoration: none;
+  }
+
+  li a {
+    color: #001529;
+  }
+
+  li:hover a {
+    color: #007dea;
+  }
+
+  li:hover,
+  li:focus-within {
+    cursor: pointer;
+  }
+
+  li:focus-within a {
+    outline: none;
+  }
+
+  ul li ul {
+    background: #fff;
+    box-shadow: 5px 10px 5px 0px rgba(0, 0, 0, 0.75);
+    border-left: thin solid;
+    visibility: hidden;
+    opacity: 0;
+    min-width: 5rem;
+    position: absolute;
+    transition: all 0.5s ease;
+    margin-top: 1rem;
+    left: 0;
+    display: none;
+  }
+
+  ul li:hover > ul,
+  ul li:focus-within > ul,
+  ul li ul:hover,
+  ul li ul:focus {
+    visibility: visible;
+    opacity: 1;
+    display: block;
+  }
+
+  ul li ul li {
+    clear: both;
+    width: 100%;
+    margin-left: 0;
+    padding: 0;
+  }
+
+  ul li ul li a {
+    border: none;
+    display: inline-block;
+    padding: 16px;
+  }
+}

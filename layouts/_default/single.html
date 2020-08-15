@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {{ partial "head.html" . }}
+    {{ partial "blog-head.html" . }}
+    {{$banner := .Page.Resources.GetMatch .Params.banner | fingerprint -}}
+    <meta property="og:title" content="{{.Title}}">
+    <meta property="og:image" content="{{$banner.Permalink}}">
+    <meta property="og:description" content="{{.Params.shortsummary}}">
+    <meta property="og:url" content="{{.Page.Permalink}}">
+    <meta name="Description" content="{{.Params.shortsummary}}">
+    <title>{{.Title}}</title>
+  </head>
+  <body>
+    {{ partial "blog-menu.html" . }}
+    {{- $image := .Page.Resources.GetMatch .Params.banner | fingerprint -}}
+    <img alt="{{ .Title }} banner" src="{{ $image.RelPermalink }}"/>
+    <h1>{{ .Title }}</h1>
+    <span>Date written: {{ .Date.Format "January 2, 2006" }}</span>
+    {{.Content}}
+    {{ partial "blog-footer.html" . }}
+  </body>
+</html>
