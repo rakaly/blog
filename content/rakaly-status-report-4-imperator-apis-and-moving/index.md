@@ -17,7 +17,7 @@ It's been a few weeks since the last update, and in that time frame I've moved t
 - Improved the range of game files rakaly supports
 - Imperator parser
 
-Side note, I've been enjoying a relaxing EU4 game of Oman, building up a trade + vassal empire and it was nice to see a [reddit guide](https://www.reddit.com/r/eu4/comments/ixe31z/billbabbles_experts_guide_to_trade_for_real_doges/?utm_source=share&utm_medium=web2x&context=3) on trade which touched upon how overpowered Oman can be due to it's unique 33% trade steering tradition.
+Side note, I've been enjoying a relaxing EU4 game of Oman, building up a trade + vassal empire and it was nice to see a [reddit guide](https://www.reddit.com/r/eu4/comments/ixe31z/billbabbles_experts_guide_to_trade_for_real_doges/?utm_source=share&utm_medium=web2x&context=3) on trade which touched upon how overpowered Oman can be due to their unique 33% trade steering tradition.
 
 ## Query API Foundations
 
@@ -35,7 +35,7 @@ return { prestige: playerPrestige }
 
 The returned data could simply be printed out for a start. Then for more complex queries, either the data can be formulated into a csv for export or even piped right into one of Rakaly's visualizations.
 
-I believe a query API would be a welcomed addition as having the same API over all saves (ironman and standard) as well as being the fastest and most complete EU4 parser availble to the browser could make Rakaly one stop shop for EU4 players who are comfortable playing around with save files and know a bit of Javascript.
+I believe a query API would be a welcomed addition as having the same API over all saves (ironman and standard) as well as being the fastest and most complete EU4 parser available to the browser could make Rakaly one stop shop for EU4 players who are comfortable playing around with save files and know a bit of Javascript.
 
 ## Parser Improvements
 
@@ -61,7 +61,7 @@ mild_winter = LIST { 3700 3701
 }
 ```
 
-I've implemented all this additional syntax with only a negligble loss to performance. It's important to support this syntax as savefiles are not standalone. One can't compute discipline, trade steering, or anything that has incorporates modifiers without looking or parsing the game files. And while EU4 game files don't use any complicated syntax, it's important (to me at least) that all PDS games use the same set of logic.
+I've implemented all this additional syntax with only a negligible loss to performance. It's important to support this syntax as savefiles are not standalone. One can't compute discipline, trade steering, or anything that incorporates modifiers without looking or parsing the game files. And while EU4 game files don't use any complicated syntax, it's important (to me at least) that all PDS games use the same set of logic.
 
 ## Imperator
 
