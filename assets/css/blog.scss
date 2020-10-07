@@ -36,6 +36,9 @@ nav[role="navigation"] {
 
   li a {
     color: #001529;
+    @media (prefers-color-scheme: dark) {
+      color: white;
+    }
   }
 
   li:hover a {
@@ -85,5 +88,17 @@ nav[role="navigation"] {
     border: none;
     display: inline-block;
     padding: 16px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color: rgb(152, 163, 173);
+    scrollbar-color: rgb(151, 173, 184) rgb(19, 21, 22);
+    background-color: rgb(19, 21, 22);
+  }
+
+  a {
+    color: rgb(43, 121, 162);
   }
 }
