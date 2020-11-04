@@ -2,13 +2,9 @@
 title: "Calculating EU4 Province Terrain"
 date: 2020-11-04
 banner: eu4-terrain.jpg
-shortsummary: "Foundations laid for a user savefile query API, improved the range of game files rakaly supports, and imperator parser"
+shortsummary: "Calculating the terrain type of an EU4 province is surprisingly tricky with both automatic algorithm, manual overrides, and tons of edge cases"
 summary: |
-  It's been a few weeks since the last update as my time has been taken up by moving a household to a new city, but I have some tidbits in store:
-
-  - Foundations laid for a user savefile query API
-  - Improved the range of game files rakaly supports
-  - Imperator parser
+  One of the EU4 achievements left to implement is Eat your Greens where one needs to control all grassland provinces in Asia. While the terrain of a province is an easy concept to grasp, it's surprisingly difficult to calculate. One can explicitly set the terrain of a province (and this has its own edge case) and the other half of the world has an automatic algorithm that leverages several game files and very low level details about BMP images. I've reverse engineered and documented the algorithm.
 ---
 
 One of the EU4 achievements left to implement is Eat your Greens where one needs to control all grassland provinces in Asia. While the terrain of a province is an easy concept to grasp, it's surprisingly difficult to calculate. 
