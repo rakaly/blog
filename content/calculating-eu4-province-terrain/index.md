@@ -162,11 +162,11 @@ The solution is to ignore all pixels in a province's area that are part of a riv
 _ => false,
 ```
 
-The first question to answer is, does taking into account rivers effect our other test cases? The good news is that there are no rivers in Djerba (2954), so the lowest terrain index in a tie still takes precedent. And taking the combined terrain is still used over the single most dominant.
+The first question to answer is, does taking into account rivers affect our other test cases? The good news is that there are no rivers in Djerba (2954), so the lowest terrain index in a tie still takes precedent. And taking the combined terrain is still used over the single most dominant.
 
-Looking over the provinces, I stumbled upon Tzotzil (4585) which has both grasslands (0) and hills (1) tied, so one would expect the province to be grasslands. What does terrain does EU4 assign it? Jungle. How is this possible? Trees.
+Looking over the provinces, I stumbled upon Tzotzil (4585) which has both grasslands (0) and hills (1) tied, so one would expect the province to be grasslands. What terrain does EU4 assign it? Jungle. How is this possible? Trees.
 
-**Thank you to the helpful folks behind the [Paradox Game Converters](https://github.com/ParadoxGameConverters), who were instrumental in determining how rivers effected the terrain algorithm** 
+**Thank you to the helpful folks behind the [Paradox Game Converters](https://github.com/ParadoxGameConverters), who were instrumental in determining how rivers affected the terrain algorithm** 
 
 ## Trees
 
