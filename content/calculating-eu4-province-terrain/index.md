@@ -137,6 +137,8 @@ There are 3 provinces that currently have a tie for the most populous terrain an
 
 The tie is broken by which terrain has the lower color index (in parentheses).
 
+{{< sfffig src="djerba-tie.png" caption="Terrain.bmp showing Djerba with an equal amount of desert as coastline" >}}
+
 Upon closer examination Macau (668) features two types of grassland indices (0 and 4) and combined outnumber the coastline (35). Lima also exhibits this behavior with several types of mountains.
 
 This is another edge case as a given terrain type like forest maps to indices 12, 13, 14, so it's possible that a province could be dominated by forests but if the forest types are split evenly, a different terrain may appear to be dominant. This occurs surprisingly often with about 20 provinces afflicted (and these provinces don't have an explicit terrain type set). So far, I've found that the combined terrain outweighs the predominant terrain as seen in the below spreadsheet. I've outlined the outlier so far. 
@@ -145,11 +147,17 @@ This is another edge case as a given terrain type like forest maps to indices 12
 
 What's up with Qus? Rivers.
 
-Before we get to the impact of rivers, it's instructive to look at Corfu (142). The defined province area is disproprotionately large compared to the size of Corfu's land terrain, causing the majority of the Corfu province area to be considered inland ocean. Since there is no land province in EU4 that can have a terrain type of inland ocean, we subtract out the water pixels before calculating the terrain. And on the topic of water, let's get back to rivers. 
+Before we get to the impact of rivers, it's instructive to look at Corfu (142). The defined province area is disproprotionately large compared to the size of Corfu's land terrain, causing the majority of the Corfu province area to be considered inland ocean. Since there is no land province in EU4 that can have a terrain type of inland ocean, we subtract out the water pixels before calculating the terrain. And on the topic of water, let's get back to rivers.
+
+{{< sfffig src="corfu-water.png" caption="Terrain.bmp showing Corfu is mostly water" >}}
 
 ## Rivers
 
-Open up `map/rivers.bmp` and zoom into Qus. There is a river coursing through the province. In `terrain.bmp` the river pixels are colored as grasslands. There isn't a universal terrain that rivers are colored. Some rivers are mountainous and others are grassy, and these colored river pixels are enough to tip the scales of our method in the wrong direction.
+Open up `map/rivers.bmp` and zoom into Qus. There is a river coursing through the province. In `terrain.bmp` the river pixels are colored as grasslands as shown below.
+
+{{< sfffig src="qus-river.png" caption="Terrain.bmp showing a grassy river" >}}
+
+There isn't a universal terrain that rivers are colored. Some rivers are mountainous and others are grassy, and these colored river pixels are enough to tip the scales of our method in the wrong direction.
 
 The solution is to ignore all pixels in a province's area that are part of a river. I use the following RGB triplets in `rivers.bmp` to know if a pixel is a river:
 
@@ -173,6 +181,8 @@ Looking over the provinces, I stumbled upon Tzotzil (4585) which has both grassl
 Hardest step for last? Hopefully your eyes haven't glazed over because this last step will require the most critical thinking.
 
 Heavily forested areas are defined by `map/trees.bmp`. There is an issue with this image. It has a different resolution than the other images we've been working with: the trees image is 8x skinnier and around 7x shorter (but not exactly 7x). We can upscale this image using the nearest neighbor approach to get to approximately the same resolution as the other images.
+
+{{< sfffig src="tree-override.png" caption="Upscaled trees.bmp overlapped with terrain.tmp" >}}
 
 Additionally, just like how terrain.bmp had BMP color indices defined in terrain.txt, so does trees.bmp
 
@@ -222,7 +232,7 @@ for (row, data) in trees_bmp.data().enumerate() {
 }
 ```
 
-And then use this tree override to take precedent over any other terrain. This still follows the same rules that a province can have some jungle terrain but another terrain type can be chosen if it is still dominant.
+And then use this tree override to overwrite the original terrain at a given pixel. This still follows the same rules that a province can have some jungle terrain but another terrain type can be chosen if it is still dominant.
 
 There is some wiggle room that I may not have accounted for:
 
