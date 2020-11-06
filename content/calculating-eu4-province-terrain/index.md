@@ -103,7 +103,9 @@ Then count the pixels from `terrain.bmp` that appear inside Ibra's borders. Your
 - Light brown (CEA963): 236 pixels
 - Brown (9E824D): 135 pixels
 
-Ibra is predominately light brown and the next step is to resolve this color to a terrain type. This is done by looking at the BMP file at a very low level. BMP files carry with them a color table where the pixels are indexed into the color table which contains the RGB info. This saves on space as pixels can be stored in a single byte instead of 3 or 4 bytes.
+{{< sfffig src="ibra-zoom.png" caption="Terrain.bmp zoomed into Ibra" >}}
+
+Ibra is predominately light brown and the next step is to resolve this color to a terrain type. This is done by looking at the BMP file at a very low level (so low level that I had to write my own BMP parser in my language of choice). BMP files carry with them a color table where the pixels are indexed into the color table which contains the RGB info. This saves on space as pixels can be stored in a single byte instead of 3 or 4 bytes.
 
 Once we know the color table index, we go back to `map/terrain.txt` and lookup what type has the same color table index. Without getting too into the weeds on how to parse BMP files, the color `9E824D` is set by the 3rd color table index, so we resolve the terrain as desert:
 
