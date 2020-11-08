@@ -164,15 +164,19 @@ There isn't a universal terrain that rivers are colored. Some rivers are mountai
 The solution is to ignore all pixels in a province's area that are part of a river. I use the following RGB triplets in `rivers.bmp` to know if a pixel is a river:
 
 ```
-(0, 200, 255) => true,
+(0, 200, 255) => true, // Bahawalpur (4508)
 (0, 100, 255) => true,
-(0, 0, 200) => true,
-(0, 225, 255) => true,
+(0, 0, 200) => true, // Qos (360)
 (0, 150, 255) => true,
+(0, 225, 255) => false, // Bregenz (4710)
 _ => false,
 ```
 
-The first question to answer is, does taking into account rivers affect our other test cases? The good news is that there are no rivers in Djerba (2954), so the lowest terrain index in a tie still takes precedent. And taking the combined terrain is still used over the single most dominant.
+The code comments indicate which provinces would see their terrain change if the the logic was flipped, so be careful to not count all rivers. You can see above that I marked some blue pixels as not rivers, else they will flip some provinces to a different terrain. For instance, we need Bregenz (4710) to be mountains and not hills. If we included the river, it would be marked as hills.
+
+{{< sfffig src="bregenz.png" caption="Omit certain rivers from consideration like in Bregenz" >}}
+
+The next question to answer is, does taking into account rivers affect our other test cases? The good news is that there are no rivers in Djerba (2954), so the lowest terrain index in a tie still takes precedent. And taking the combined terrain is still used over the single most dominant.
 
 Looking over the provinces, I stumbled upon Tzotzil (4585) which has both grasslands (0) and hills (1) tied, so one would expect the province to be grasslands. What terrain does EU4 assign it? Jungle. How is this possible? Trees.
 
@@ -208,25 +212,26 @@ So we'll also need to map the found indices in trees.bmp back to the jungle and 
 let province_width = rivers_bmp.dib_header.width as usize;
 for (row, data) in trees_bmp.data().enumerate() {
     for (col, pix) in data.iter().enumerate() {
-        // If we see a pixel in trees.bmp at (25, 15) the corresponding start
-        // would be: (199, 102) as we upscale it to the same resolution as
-        // terrain, provinces, and rivers.bmp. The width is upscaled by 8 and
-        // the height is upscaled by 6.989761092150171 with a minor adjustment
-        // (the -1 and -2 that were derived from trial and error)
-        // to the starting location so that all province tests pass.
-        let start_x = col * 8 - 1;
+        // Upscale the trees.bmp pixel using nearest neighbor using the
+        // resolution ratio between the images.  let start_x = col * 8 - 2;
         let start_y = ((row as f64) * 6.989761092150171) as usize - 2;
 
         if forest_colors.contains(pix) {
             for x in start_x..start_x + 8 {
-                for y in start_y..start_y + 7 {
+                for y in start_y..start_y + 6 {
                     tree_override[x + (y * province_width)] = Terrain::Forest as u8;
                 }
             }
         } else if jungle_colors.contains(pix) {
             for x in start_x..start_x + 8 {
-                for y in start_y..start_y + 7 {
+                for y in start_y..start_y + 6 {
                     tree_override[x + (y * province_width)] = Terrain::Jungle as u8;
+                }
+            }
+        } else if pix == 5 { // woods
+            for x in start_x..start_x + 8 {
+                for y in start_y..start_y + 6 {
+                    tree_override[x + (y * province_width)] = Terrain::Woods as u8;
                 }
             }
         }
@@ -239,13 +244,11 @@ And then use this tree override to overwrite the original terrain at a given pix
 There is some wiggle room that I may not have accounted for:
 
 - `default.map`: has a comment which states that `tree` defines which indices are used but it doesn't look correct, as jungle is missing
-- Thus I only trap for jungle and forest from trees.bmp and add them to the terrain override 
-
-Let me know if you encounter a province that fell into this crack.
+- Thus I only trap for some indices trees.bmp and add them to the terrain override 
 
 ## Conclusion
 
-Here are the rules for determining a province's terrain. This algorithm has been tested on 120+ provinces that do not have an override.
+Here are the rules for determining a province's terrain. This has been tested on all provinces on 1.30 and there are 6 provinces incorrectly assigned but this is close enough that I felt confident about publishing.
 
 - If the province id is listed in `terrain.txt`, choose the terrain that lists the province id first
 - Else combine all similar terrains with overriding trees and choose the combined terrain that occurs most often in the province's `terrain.bmp` area, subtracting water (river + ocean) pixels, and breaking any ties by preferring terrain with the smallest color index 
@@ -264,3 +267,121 @@ So back to the Eat your Greens achievement. The following files are necessary in
 If I was a better person, I'd add this info to the EU4 wiki in a tone agnostic format without an overarching narrative or code snippets, but I'm exhausted and I could very well be wrong in my conclusions, so at the very least hopefully this has proved informative.
 
 Now I can rest and pick back up implementing Eat your greens.
+
+## Addendum
+
+The following EU4 run script can be used to assign provinces of a certain terrain. This proved invaluable while testing the algorithm.
+
+```plain
+every_province = {
+    limit = {
+        has_terrain = grasslands
+    }
+    cede_province = KAL
+}
+
+every_province = {
+    limit = {
+        has_terrain = hills
+    }
+    cede_province = FRA
+}
+
+every_province = {
+    limit = {
+        has_terrain = mountain
+    }
+    cede_province = SWI
+}
+
+every_province = {
+    limit = {
+        has_terrain = desert
+    }
+    cede_province = OMA
+}
+
+every_province = {
+    limit = {
+        has_terrain = marsh
+    }
+    cede_province = SWE
+}
+
+every_province = {
+    limit = {
+        has_terrain = farmlands
+    }
+    cede_province = HOL
+}
+
+every_province = {
+    limit = {
+        has_terrain = forest
+    }
+    cede_province = NOV
+}
+
+every_province = {
+    limit = {
+        has_terrain = coastal_desert
+    }
+    cede_province = TUN
+}
+
+every_province = {
+    limit = {
+        has_terrain = coastline
+    }
+    cede_province = VEN
+}
+
+every_province = {
+    limit = {
+        has_terrain = savannah
+    }
+    cede_province = CRE
+}
+
+every_province = {
+    limit = {
+        has_terrain = drylands
+    }
+    cede_province = MAM
+}
+
+every_province = {
+    limit = {
+        has_terrain = highlands
+    }
+    cede_province = KAR
+}
+
+every_province = {
+    limit = {
+        has_terrain = woods
+    }
+    cede_province = MOS
+}
+
+every_province = {
+    limit = {
+        has_terrain = jungle
+    }
+    cede_province = COC
+}
+
+every_province = {
+    limit = {
+        has_terrain = steppe
+    }
+    cede_province = KAZ
+}
+
+every_province = {
+    limit = {
+        has_terrain = glacier
+    }
+    cede_province = KMC
+}
+```
