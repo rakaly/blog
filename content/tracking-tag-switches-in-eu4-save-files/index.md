@@ -30,7 +30,7 @@ players_countries={ "Player" "GBR" }
 start_date=1444.11.11
 ```
 
-The above shows that I'm playing as Great Britain. If this was a multiplayer playthrough, the even indices would be player names while odd would signal that player's country tag.
+The above shows that I'm playing as Great Britain. If this was a multiplayer playthrough, the even indices would be player names while odd would signal that player's country tag (keep in mind that more than one player can be assigned to a country).
 
 We then find our country in the countries section of a save file:
 
