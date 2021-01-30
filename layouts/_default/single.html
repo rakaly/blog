@@ -13,8 +13,7 @@
   </head>
   <body>
     {{ partial "blog-menu.html" . }}
-    {{- $image := .Page.Resources.GetMatch .Params.banner | fingerprint -}}
-    <img alt="{{ .Title }} banner" src="{{ $image.RelPermalink }}"/>
+    {{- partial "cover.html" (dict "cxt" .) }}
     <h1>{{ .Title }}</h1>
     <span>Date written: {{ .Date.Format "January 2, 2006" }}</span>
     {{.Content}}

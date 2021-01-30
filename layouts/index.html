@@ -11,8 +11,7 @@
       {{ .Content }}
       {{ $len := (len .Pages) }}
       {{ range $i, $e := .Pages }}
-        {{- $image := .Page.Resources.GetMatch .Params.banner | fingerprint -}}
-        <img alt="{{ .Title }} banner" src="{{ $image.RelPermalink }}"/>
+        {{- partial "cover.html" (dict "cxt" . "loading" "lazy") }}
         <h2>{{ .Title }}</h2>
         <span>Date written: {{ .Date.Format "January 2, 2006" }}</span>
         <p>

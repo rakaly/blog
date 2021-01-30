@@ -8,6 +8,17 @@ div.highlight > pre {
   overflow-x: auto;
 }
 
+figure {
+  max-width: 512px;
+  margin: 0 auto;
+}
+
+// keep aspect ratio so no reflow on native lazy loading responsive images: https://youtu.be/4-d_SoCHeWE
+figure img {
+  max-width: 100%;
+  height: auto;
+}
+
 nav[role="navigation"] {
   // https://stackoverflow.com/a/114549/433785
   display: table;

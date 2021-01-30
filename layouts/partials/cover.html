@@ -1,14 +1,11 @@
-{{- $image := .Page.Resources.GetMatch (.Get "src") | fingerprint -}}
-{{- /* These image sizes were taken from gatsby */ -}}
+{{- with .cxt}}
+{{- $image := .Page.Resources.GetMatch .Params.banner | fingerprint -}}
 {{- $tinyImage := $image.Resize "148x" -}}
 {{- $smallImage := cond (ge $image.Width "295") ($image.Resize "295x") $image -}}
 {{- $fitImage := cond (ge $image.Width "512") ($image.Resize "512x") $image -}}
-<figure{{ with .Get "class" }} class="{{ . }}"{{ end }}>
-    <a href="{{ $image.RelPermalink }}">
-    <img loading="lazy" src="{{ $image.RelPermalink }}"
-         {{- if or (.Get "alt") (.Get "caption") }}
-         alt="{{ with .Get "alt" }}{{ . }}{{ else }}{{ .Get "caption" | markdownify| plainify }}{{ end }}"
-         {{- end -}}
+<figure>
+    <img{{ with $.loading }} loading="{{ . }}"{{ end }} src="{{ $image.RelPermalink }}"
+         alt="{{ .Title }} banner"
          srcset='
             {{- if ge $image.Width "148" -}}
               {{ $tinyImage.RelPermalink }} 148w
@@ -34,21 +31,6 @@
                 '
         width="{{ $image.Width }}"
         height="{{ $image.Height }}"
-    /> <!-- Closing img tag -->
-    </a>
-    {{- if or (or (.Get "title") (.Get "caption")) (.Get "attr") -}}
-        <figcaption>
-            {{ with (.Get "title") -}}
-                <h4>{{ . }}</h4>
-            {{- end -}}
-            {{- if or (.Get "caption") (.Get "attr") -}}<p>
-                {{- .Get "caption" | markdownify -}}
-                {{- with .Get "attrlink" }}
-                    <a href="{{ . }}">
-                {{- end -}}
-                {{- .Get "attr" | markdownify -}}
-                {{- if .Get "attrlink" }}</a>{{ end }}</p>
-            {{- end }}
-        </figcaption>
-    {{- end }}
+    />
 </figure>
+{{- end -}}{{/* End context */}}
