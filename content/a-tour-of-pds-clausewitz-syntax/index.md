@@ -225,6 +225,12 @@ unit_type="western"  # bad: save corruption
 unit_type=western    # good
 ```
 
+Victoria II has instances where unquoted keys contain non-ascii characters (specifically Windows-1252 which matches the Victoria II save file encoding).
+
+```
+jean_jaurès = { }
+```
+
 A scalar has at least one character:
 
 ```plain
