@@ -6,6 +6,8 @@ shortsummary: "A concise guide to the basic syntax that the Clausewitz parser ha
 summary: "Paradox Development Studio (PDS) develops a game engine called Clausewitz that consumes and produces files in a proprietary format. This format is undocumented. I decided it would be worthwhile for myself as well as future developers interested in writing parsers to not only know the basics of this format but also the edge cases that I've encountered along the way."
 ---
 
+**Last updated**: 2021-02-17
+
 [Paradox Development Studio (PDS) develops a game engine called Clausewitz](https://en.wikipedia.org/wiki/Paradox_Development_Studio#Game_engines) that consumes and produces files in a proprietary format. This format is undocumented so I decided that it would be a good idea to showcase the happy path, but more importantly, edge cases so that anyone who is interested in writing parsers (myself included) can plan accordingly because there are a lot of parsers: [#1](https://github.com/ParadoxGameConverters/commonItems), [#2](https://github.com/nickbabcock/jomini), [#3](https://github.com/cwtools/cwtools), [#4](https://github.com/rakaly/jomini), [#5](https://github.com/Shadark/ClauseWizard), [#6](https://github.com/nickbabcock/Pfarah), [#7](https://github.com/primislas/oikoumene), [#8](https://github.com/nickbabcock/Pdoxcl2Sharp), [#9](https://github.com/fuchsi/clausewitz_parser), [#10](https://github.com/soryy708/ClauParse), [#11](https://github.com/rikbrown/klausewitz-parser), [#12](https://github.com/ClauText/ClauParser), [#13](https://gitgud.io/nixx/paperman), [#14](https://github.com/cormac-obrien/pdx-txt), [#15](https://github.com/cloudwu/pdxparser), [#16](https://github.com/scorpdx/ck3json, [#17](https://github.com/Osallek/Clausewitz-Parser)). And these are the only ones I've found after a quick open source search!
 
 So if anyone wants to write a parser for Europa Universalis IV, Crusader Kings III, Stellaris, Hearts of Iron IV, Imperator -- this should be a good starting point. Before getting started with the tour, I see some try and describe the format formally with [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form) and while this may be possible, reality is a bit more messy. The data format is undocumented and any parser will need to be flexible enough to ingest whatever the engine produces or can also ingest. 
@@ -54,12 +56,11 @@ ddd=yes         # a true scalar
 eee=no          # a false scalar
 fff="foo"       # a quoted scalar
 ggg=1821.1.1    # a date scalar in Y.M.D format
-hhh="a\"b"      # a quoted scalar with an escaped quote
 ```
 
 Some notes:
 
-- A quoted scalar can contain any of other scalar (except for another quoted scalar)
+- A quoted scalar can contain any of other scalar (date, integers, boolean)
 - A quoted scalar can contain any character including newlines. Everything until the next unescaped quote is valid
 - A quoted scalar can contain non-ascii characters like "Jåhkåmåhkke". The encoding for quoted scalars will be either Windows-1252 (games like EU4) or UTF-8 (games like CK3)
 - Decimal scalars vary in precision between games and context. Sometimes precision is recorded to thousandths, tens-thousandths, etc.
@@ -81,6 +82,23 @@ a=1 b=2 c=3
 ```
 
 Whitespace is considered a boundary, but we'll see more.
+
+Quoted scalars are by far the trickiest as they have several escape rules:
+
+```
+hhh="a\"b"      # escaped quote. Equivalent to `a"b`
+iii="\\"        # escaped escape. Equivalent to `\`
+mmm="\\\""      # multiple escapes. Equivalent to `\"`
+
+# a multiline quoted scalar
+ooo="hello
+     world"
+
+# Quotes can contain escape codes! Imperator uses them as
+# color codes (somehow `0x15` is translated to `#` in the
+# parsing process)
+nnn="ab <0x15>D ( ID: 691 )<0x15>!"
+```
 
 ## Arrays / Objects
 
@@ -198,6 +216,13 @@ flavor_tur.8=yes
 dashed-identifier=yes
 province_id = event_target:agenda_province
 @planet_standard_scale = 11
+```
+
+Equivalent quoted and unquoted scalars are not always intepretted the same by EU4, so one should preserve if a value was quoted in whatever internal structure. It is unknown if other games suffer from this phenomenon. The most well known example is how EU4 will only accept the quoted values for a field:
+
+```
+unit_type=western    # bad: save corruption
+unit_type="western"  # good
 ```
 
 A scalar has at least one character:
