@@ -221,8 +221,8 @@ province_id = event_target:agenda_province
 Equivalent quoted and unquoted scalars are not always intepretted the same by EU4, so one should preserve if a value was quoted in whatever internal structure. It is unknown if other games suffer from this phenomenon. The most well known example is how EU4 will only accept the quoted values for a field:
 
 ```
-unit_type=western    # bad: save corruption
-unit_type="western"  # good
+unit_type="western"  # bad: save corruption
+unit_type=western    # good
 ```
 
 A scalar has at least one character:
