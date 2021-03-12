@@ -218,6 +218,15 @@ province_id = event_target:agenda_province
 @planet_standard_scale = 11
 ```
 
+Don't try to blank store all numbers as 64 bit floating point, as there are some 64 bit unsigned integers that would cause floating point to lose precision:
+
+```
+identity=18446744073709547616
+
+# converted to floating point would equal:
+# identity=18446744073709548000
+```
+
 Equivalent quoted and unquoted scalars are not always intepretted the same by EU4, so one should preserve if a value was quoted in whatever internal structure. It is unknown if other games suffer from this phenomenon. The most well known example is how EU4 will only accept the quoted values for a field:
 
 ```
